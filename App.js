@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
+import * as MediaLibrary from 'expo-media-library'
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 
@@ -48,6 +49,18 @@ export default function CameraGalleryApp() {
       }
     }
   };
+
+  const saveImage = async (imagen) => {
+      try {
+        MediaLibrary.saveToLibraryAsync(imagen)
+      }
+      catch (error) {
+        Alert.alert("Error", "No se pudo guardar la foto");
+        console.log(error);
+      }
+      Alert.alert('Imagen guardada con éxito')
+      console.log("Imagen guardada")
+  }
 
   const pickImageFromGallery = async () => {
     if (!hasGalleryPermission) {
@@ -143,6 +156,14 @@ export default function CameraGalleryApp() {
         onPress={pickImageFromGallery}>
         <Text style={styles.buttonText}>🖼️ Abrir Galería</Text>
       </TouchableOpacity>
+
+      {capturedImage && (
+        <TouchableOpacity
+        style= {[styles.button]}
+        onPress={() => saveImage(capturedImage)}>
+        <Text style={styles.buttonText}>Guardar Imagen</Text>
+        </TouchableOpacity>
+      )}
 
       {capturedImage && (
         <TouchableOpacity
